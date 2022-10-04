@@ -165,7 +165,7 @@ const About = () => {
         </SubTextLight>
         <ButtonContainer>
         <ThemeProvider theme={dark}>
-        <Button text="JOIN OUR DISCORD" link="https://google.com" />
+        <Button text="JOIN OUR DISCORD" link="https://discord.com/invite/Rx6uyNqcVw" />
         </ThemeProvider>
         </ButtonContainer>
          </Box>
@@ -173,15 +173,6 @@ const About = () => {
     </Section>
   )
 }
-
-// About         Mint Fee
-// The mint fee consists of three parts. 
-// The first part will flow to repurchase pool, which is 0.001 ETH. As the amount of NFT increase, the repurchase price for the final champion NFT will increase.
-
-// The second part is early birds’ compensation fee, which is 0.000025 ETH each for holders who mint before you do so. People mint NFT later will have more information and higher possibility to get the final champion NFT. Therefore, the holders who mint NFT in the early stage should be compensated.
-
-// The final part is creator fee, which is 0.0005ETH
-
 
 
 

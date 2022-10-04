@@ -17,8 +17,6 @@ const Loader = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-
 const spin = keyframes`
   0% {
     transform: rotate(0deg);
@@ -40,11 +38,7 @@ const Spinner = styled.div`
 const Loading = () => {
  
     return (
-      
         <Loader>
-          
-            
-
             <Spinner>
               <div />
               <div />

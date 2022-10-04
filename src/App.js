@@ -1,54 +1,62 @@
+import Navigation from "./components/Navigation";
+import ScrollToTop from "./components/ScrollToTop";
+import Home from "./components/sections/Home";
+import About from "./components/sections/About";
+import Roadmap from "./components/sections/Roadmap";
+import Faq from "./components/sections/Faq";
+import Mint from "./components/sections/Mint";
+import Footer from "./components/Footer";
 
 
 import GlobalStyles from "./styles/GlobalStyles";
-import { dark, light } from "./styles/Themes";
-import { ThemeProvider } from "styled-components";
+import {dark, light} from "./styles/Themes";
+import {ThemeProvider} from "styled-components";
 
-// import { lazy, Suspense } from "react";
-// import Loading from "./components/Loading";
 
-// Below Imports using React.lazy and Suspence
+import "@rainbow-me/rainbowkit/styles.css"
+import {getDefaultWallets, RainbowKitProvider} from "@rainbow-me/rainbowkit";
 
-// const Navigation = lazy(() => import("./components/Navigation"));
-// const Home = lazy(() => import("./components/sections/Home"));
-// const About = lazy(() => import("./components/sections/About"));
-// const Roadmap = lazy(() => import("./components/sections/Roadmap"));
-// const Team = lazy(() => import("./components/sections/Team"));
-// const Showcase = lazy(() => import("./components/sections/Showcase"));
-// const Faq = lazy(() => import("./components/sections/Faq"));
-// const Footer = lazy(() => import("./components/Footer"));
-// const ScrollToTop = lazy(() => import("./components/ScrollToTop"));
+import {chain, configureChains, createClient, WagmiConfig} from "wagmi";
+import {alchemyProvider} from "wagmi/providers/alchemy";
+import {publicProvider} from "wagmi/providers/public";
 
-import Navigation from "./components/Navigation";
-import About from "./components/sections/About";
-import Home from "./components/sections/Home";
-import Roadmap from "./components/sections/Roadmap";
-import Team from "./components/sections/Team";
-import Footer from "./components/Footer";
-import Showcase from "./components/sections/Showcase";
-import Faq from "./components/sections/Faq";
-import ScrollToTop from "./components/ScrollToTop";
+
+const {chains, provider} = configureChains(
+    [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
+    [alchemyProvider({alchemyId: process.env.ALCHEMY_ID}), publicProvider()]
+);
+const {connectors} = getDefaultWallets({
+    appName: "My RainbowKit App",
+    chains
+});
+
+const wagmiClient = createClient({
+    autoConnect: true,
+    connectors,
+    provider
+});
 
 function App() {
-  return (
-    <main>
-      <GlobalStyles />
-      <ThemeProvider theme={light}>
-        {/* <Suspense fallback={<Loading />}> */}
-          <Navigation />
-          <Home />
-          <About />
-          <Roadmap />
-          <Showcase />
-          <Team />
-          <Faq />
-          <Footer />
-          {/* <ScrollToTop scrollPosition={y}/> */}
-          <ScrollToTop />{" "}
-        {/* </Suspense> */}
-      </ThemeProvider>
-    </main>
-  );
+    return (
+        <main>
+            <WagmiConfig client={wagmiClient}>
+                <RainbowKitProvider chains={chains}>
+                    <GlobalStyles/>
+                    <ThemeProvider theme={light}>
+                        <Navigation/>
+                        <Home/>
+                        <About/>
+                        <Roadmap/>
+                        <Mint/>
+                        <Faq/>
+                        <Footer/>
+                        <ScrollToTop/>{" "}
+                    </ThemeProvider>
+                </RainbowKitProvider>
+            </WagmiConfig>
+
+        </main>
+    );
 }
 
 export default App;

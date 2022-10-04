@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Button from "./Button";
 import Logo from "./Logo";
 
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 const Section = styled.section`
   width: 100vw;
   background-color: ${(props) => props.theme.body};
@@ -15,10 +16,6 @@ const NavBar = styled.nav`
   width: 85%;
   height: ${(props) => props.theme.navHeight};
   margin: 0 auto;
-
-  .mobile {
-    display: none;
-  }
 
   @media (max-width: 64em) {
     .desktop {
@@ -45,7 +42,7 @@ const Menu = styled.ul`
     bottom: 0;
     width: 100vw;
     height: ${(props) => `calc(100vh - ${props.theme.navHeight})`};
-    z-index: 50;
+    z-index: 150;
     background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.85)`};
     backdrop-filter: blur(2px);
 
@@ -156,22 +153,23 @@ const Navigation = () => {
           &nbsp;
         </HamburgerMenu>
         <Menu click={click}>
-          <MenuItem onClick={() => scrollTo("home")}></MenuItem>
           <MenuItem onClick={() => scrollTo("about")}>About</MenuItem>
           <MenuItem onClick={() => scrollTo("roadmap")}>Roadmap</MenuItem>
           <MenuItem onClick={() => scrollTo("faq")}>FAQ</MenuItem>
           <MenuItem onClick={() => scrollTo("showcase")}>Mint</MenuItem>
-          <MenuItem onClick={() => scrollTo("team")}>My NFts</MenuItem>
-         
-          <MenuItem>
-            <div className="mobile">
-              <Button text="Connect Wallet" link="https://google.com" />
-            </div>
+          <MenuItem onClick={() => scrollTo("team")}>My NFTs</MenuItem>
+
+          <MenuItem >
+            <ConnectButton/>
           </MenuItem>
+
+
+          {/*<ConnectButton>*/}
+          {/*  <div className="desktop">*/}
+          {/*    <Button text="Connect Wallet" link="https://google.com" />*/}
+          {/*  </div>*/}
+          {/*</ConnectButton>*/}
         </Menu>
-        <div className="desktop">
-          <Button text="Connect Wallet" link="https://google.com" />
-        </div>
       </NavBar>
     </Section>
   );

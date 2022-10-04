@@ -94,7 +94,7 @@ const TypeWriterText = () => {
       </Title>
       <SubTitle> Qatar NFT ? Try Something New.</SubTitle>
       <ButtonContainer>
-        <Button text="Explore" link="https://google.com" />
+        <Button text="Explore" link="https://opensea.io/" />
       </ButtonContainer>
     </>
   );
