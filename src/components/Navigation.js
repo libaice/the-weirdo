@@ -11,7 +11,7 @@ const Section = styled.section`
 const NavBar = styled.nav`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
 
   width: 85%;
   height: ${(props) => props.theme.navHeight};
@@ -29,7 +29,7 @@ const NavBar = styled.nav`
 const Menu = styled.ul`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
   list-style: none;
 
   @media (max-width: 64em) {
@@ -50,7 +50,7 @@ const Menu = styled.ul`
       props.click ? "translateY(0)" : `translateY(1000%)`};
     transition: all 0.3s ease;
     flex-direction: column;
-    justify-content: center;
+    justify-content: end;
 
     touch-action: none;
   }
@@ -98,7 +98,7 @@ const HamburgerMenu = styled.span`
       : "translateX(-50%) rotate(0)"};
 
   display: none;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
 
   cursor: pointer;

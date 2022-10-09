@@ -135,7 +135,9 @@ const Footer = () => {
     return (
         <Section>
             <Suspense fallback={<Loading/>}>
-                <Banner/> </Suspense>
+                <Banner/>
+            </Suspense>
+
             <Container>
                 <Left>
                     <Logo/>

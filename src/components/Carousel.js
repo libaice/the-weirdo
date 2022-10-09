@@ -130,10 +130,10 @@ const Carousel = () => {
                 grabCursor={true}
                 className="mySwiper"
             >
-                <SwiperSlide> <img width={500} height={500} src={img1} alt="The Weirdos"/> </SwiperSlide>
-                <SwiperSlide> <img width={500} height={500} src={img2} alt="The Weirdos"/> </SwiperSlide>
-                <SwiperSlide> <img width={500} height={500} src={img3} alt="The Weirdos"/> </SwiperSlide>
-                <SwiperSlide> <img width={500} height={500} src={img4} alt="The Weirdos"/> </SwiperSlide>
+                <SwiperSlide> <img width={500} height={500} src={img1} alt="World Cyp Memory"/> </SwiperSlide>
+                <SwiperSlide> <img width={500} height={500} src={img2} alt="World Cyp Memory"/> </SwiperSlide>
+                <SwiperSlide> <img width={500} height={500} src={img3} alt="World Cyp Memory"/> </SwiperSlide>
+                <SwiperSlide> <img width={500} height={500} src={img4} alt="World Cyp Memory"/> </SwiperSlide>
             </Swiper>
         </Container>
     )

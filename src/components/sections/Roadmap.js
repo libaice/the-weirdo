@@ -1,8 +1,10 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import React, { useLayoutEffect, useRef } from "react";
+import React, {useLayoutEffect, useRef} from "react";
 import styled from "styled-components";
 import DrawSvg from "../DrawSvg";
+
+import hello from "../../assets/images/hello.png";
 
 const Section = styled.section`
   min-height: 100vh;
@@ -77,28 +79,30 @@ const Items = styled.ul`
 
       @media (max-width: 48em) {
         border-radius: 0 50px 0 50px;
-      text-align: left;
+        text-align: left;
         p {
           border-radius: 0 40px 0 40px;
 
         }
       }
     }
+
     p {
       border-radius: 40px 0 40px 0;
     }
   }
+
   & > *:nth-of-type(2n) {
     justify-content: end;
     @media (max-width: 48em) {
       justify-content: center;
     }
+
     div {
       border-radius: 0 50px 0 50px;
       text-align: left;
-
-      
     }
+
     p {
       border-radius: 0 40px 0 40px;
     }
@@ -157,96 +161,106 @@ const Text = styled.span`
   }
 `;
 
-const RoadMapItem = ({ title, subtext, addToRef }) => {
-  return (
-    <Item ref={addToRef}>
-      <ItemContainer>
-        <Box>
-          <SubTitle>{title} </SubTitle>
-          <Text>{subtext}</Text>
-        </Box>
-      </ItemContainer>
-    </Item>
-  );
+
+const Image = styled.img`
+  width: 5%;
+  float: left;
+  margin-right: -40px;
+`;
+
+
+const RoadMapItem = ({title, subtext, addToRef}) => {
+    return (
+        <Item ref={addToRef}>
+            <ItemContainer>
+                <Box>
+                    <SubTitle>{title} </SubTitle>
+                    <Text>{subtext}</Text>
+                </Box>
+            </ItemContainer>
+        </Item>
+    );
 };
 
 const Roadmap = () => {
-  const revealRefs = useRef([]);
-  revealRefs.current = [];
-  gsap.registerPlugin(ScrollTrigger);
+    const revealRefs = useRef([]);
+    revealRefs.current = [];
+    gsap.registerPlugin(ScrollTrigger);
 
-  const addToRefs = (el) => {
-    if (el && !revealRefs.current.includes(el)) {
-      revealRefs.current.push(el);
-    }
-  };
-
-  useLayoutEffect(() => {
-    let t1 = gsap.timeline();
-    revealRefs.current.forEach((el, index) => {
-      t1.fromTo(
-        el.childNodes[0],
-        {
-          y: "0",
-        },
-        {
-          y: "-30%",
-
-          scrollTrigger: {
-            id: `section-${index + 1}`,
-            trigger: el,
-            start: "top center+=200px",
-            end: "bottom center",
-            scrub: true,
-            // markers:true,
-          },
+    const addToRefs = (el) => {
+        if (el && !revealRefs.current.includes(el)) {
+            revealRefs.current.push(el);
         }
-      );
-    });
-
-    return () => {
-      if (t1) t1.kill();
     };
-  }, []);
 
-  return (
-    <Section id="roadmap">
-      <Title>Roadmap</Title>
-      <Container>
-        <SvgContainer>
-          <DrawSvg />
-        </SvgContainer>
-        <Items>
-          <Item>&nbsp;</Item>
-          <RoadMapItem
-            addToRef={addToRefs}
-            title="NFT Making"
-            subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
-          />
-          <RoadMapItem
-            addToRef={addToRefs}
-            title="NFT Marketing"
-            subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
-          />
-          <RoadMapItem
-            addToRef={addToRefs}
-            title="NFT Minting"
-            subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
-          />
-          <RoadMapItem
-            addToRef={addToRefs}
-            title="NFT Revealing"
-            subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
-          />
-          <RoadMapItem
-            addToRef={addToRefs}
-            title="Winner Repurchasing"
-            subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
-          />
-        </Items>
-      </Container>
-    </Section>
-  );
+    useLayoutEffect(() => {
+        let t1 = gsap.timeline();
+        revealRefs.current.forEach((el, index) => {
+            t1.fromTo(
+                el.childNodes[0],
+                {
+                    y: "0",
+                },
+                {
+                    y: "-30%",
+
+                    scrollTrigger: {
+                        id: `section-${index + 1}`,
+                        trigger: el,
+                        start: "top center+=200px",
+                        end: "bottom center",
+                        scrub: true,
+                        // markers:true,
+                    },
+                }
+            );
+        });
+
+        return () => {
+            if (t1) t1.kill();
+        };
+    }, []);
+
+    return (
+        <Section id="roadmap">
+            <Title>Roadmap</Title>
+            <Container>
+                <SvgContainer>
+                    <DrawSvg/>
+                </SvgContainer>
+                <Items>
+                    <Image src={hello}/>
+
+                    <Item>&nbsp;</Item>
+                    <RoadMapItem
+                        addToRef={addToRefs}
+                        title="NFT Making"
+                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                    />
+                    <RoadMapItem
+                        addToRef={addToRefs}
+                        title="NFT Marketing"
+                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                    />
+                    <RoadMapItem
+                        addToRef={addToRefs}
+                        title="NFT Minting"
+                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                    />
+                    <RoadMapItem
+                        addToRef={addToRefs}
+                        title="NFT Revealing"
+                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                    />
+                    <RoadMapItem
+                        addToRef={addToRefs}
+                        title="Winner Repurchasing"
+                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                    />
+                </Items>
+            </Container>
+        </Section>
+    );
 };
 
 export default Roadmap;

@@ -6,14 +6,9 @@ import Roadmap from "./components/sections/Roadmap";
 import Faq from "./components/sections/Faq";
 import Mint from "./components/sections/Mint";
 import Footer from "./components/Footer";
-
-
 import GlobalStyles from "./styles/GlobalStyles";
 import {dark, light} from "./styles/Themes";
 import {ThemeProvider} from "styled-components";
-
-
-import "@rainbow-me/rainbowkit/styles.css"
 import {getDefaultWallets, RainbowKitProvider} from "@rainbow-me/rainbowkit";
 
 import {chain, configureChains, createClient, WagmiConfig} from "wagmi";
@@ -47,7 +42,7 @@ function App() {
                         <Home/>
                         <About/>
                         <Roadmap/>
-                        <Mint/>
+                        {/*<Mint/>*/}
                         <Faq/>
                         <Footer/>
                         <ScrollToTop/>{" "}
