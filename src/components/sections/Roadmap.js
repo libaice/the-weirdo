@@ -165,7 +165,7 @@ const Text = styled.span`
 const Image = styled.img`
   width: 5%;
   float: left;
-  margin-right: -40px;
+  margin-right: -80px;
 `;
 
 

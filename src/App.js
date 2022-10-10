@@ -7,9 +7,10 @@ import Faq from "./components/sections/Faq";
 import Mint from "./components/sections/Mint";
 import Footer from "./components/Footer";
 import GlobalStyles from "./styles/GlobalStyles";
-import {dark, light} from "./styles/Themes";
+import {light} from "./styles/Themes";
 import {ThemeProvider} from "styled-components";
 import {getDefaultWallets, RainbowKitProvider} from "@rainbow-me/rainbowkit";
+import '@rainbow-me/rainbowkit/styles.css';
 
 import {chain, configureChains, createClient, WagmiConfig} from "wagmi";
 import {alchemyProvider} from "wagmi/providers/alchemy";
@@ -21,7 +22,7 @@ const {chains, provider} = configureChains(
     [alchemyProvider({alchemyId: process.env.ALCHEMY_ID}), publicProvider()]
 );
 const {connectors} = getDefaultWallets({
-    appName: "My RainbowKit App",
+    appName: "My World Cup App",
     chains
 });
 
