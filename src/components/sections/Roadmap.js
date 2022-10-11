@@ -4,7 +4,12 @@ import React, {useLayoutEffect, useRef} from "react";
 import styled from "styled-components";
 import DrawSvg from "../DrawSvg";
 
-import hello from "../../assets/images/hello.png";
+import Hello from "../../assets/images/hello.png";
+import Icon1 from "../../assets/images/icon1.png";
+import Icon2 from "../../assets/images/icon2.png";
+import Icon3 from "../../assets/images/icon3.png";
+import Icon4 from "../../assets/images/icon4.png";
+
 
 const Section = styled.section`
   min-height: 100vh;
@@ -162,10 +167,16 @@ const Text = styled.span`
 `;
 
 
-const Image = styled.img`
-  width: 5%;
+const Image1 = styled.img`
+  width: 10%;
   float: left;
-  margin-right: -80px;
+  margin-right: -580px;
+`;
+
+const Image2 = styled.img`
+  width: 10%;
+  float: left;
+  margin-right: 680px;
 `;
 
 
@@ -229,33 +240,32 @@ const Roadmap = () => {
                     <DrawSvg/>
                 </SvgContainer>
                 <Items>
-                    <Image src={hello}/>
+                    <Image2 src={Hello}/>
 
                     <Item>&nbsp;</Item>
                     <RoadMapItem
                         addToRef={addToRefs}
-                        title="NFT Making"
-                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                        title="Pre-match preparation"
+                        subtext="The NFT mint contract will be deployed on the Ethereum mainnet. All 32 different mystery box NFTs will be available on the mint page. Whitelist collectors are able to mint during the early-bird period.  The earlier you mint, the more compensation you will collect."
                     />
+                    <Image2  src={Icon1}/>
+                    <Image1  src={Icon2}/>
                     <RoadMapItem
                         addToRef={addToRefs}
-                        title="NFT Marketing"
-                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                        title="Game stage"
+                        subtext="The mint period will be open during the World Cup tournament. Collectors can mint their favorite teams according to teams performance."
                     />
+                    <Image2  src={Icon3}/>
                     <RoadMapItem
                         addToRef={addToRefs}
-                        title="NFT Minting"
-                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                        title="After the Game"
+                        subtext="Repurchase pool activation. Holders of final champion NFTs will be able to sell NFTs to the repurchase pool."
                     />
+                    <Image1  src={Icon4}/>
                     <RoadMapItem
                         addToRef={addToRefs}
-                        title="NFT Revealing"
-                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
-                    />
-                    <RoadMapItem
-                        addToRef={addToRefs}
-                        title="Winner Repurchasing"
-                        subtext="Lorem Ipsum Dolor Sit Amet Consectetur, Adipisicing Elit. At Repellat Placeat, Adipisicing Elit. At Repellat Placeat."
+                        title="Game Celebration"
+                        subtext="Final championship NFT will be revealed."
                     />
                 </Items>
             </Container>

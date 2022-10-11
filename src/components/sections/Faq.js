@@ -94,38 +94,29 @@ const Faq = () => {
             <Title>Faq</Title>
             <Container>
                 <Box>
-                    <Accordion ScrollTrigger={ScrollTrigger} title="WHERE CAN I VIEW MY NFTS?">
-                        Once minted or bought simply connect to your OpenSea account to view your NFTs.
+                    <Accordion ScrollTrigger={ScrollTrigger} title="Where Can I View My NFTs?">
+                        Once minted or bought simply connect to your OpenSea account to view your NFTs. You can also
+                        view your NFTs in My NFT page.
                     </Accordion>
-                    <Accordion ScrollTrigger={ScrollTrigger} title="WHAT IS THE METAVERSE?">
-                        A metaverse is a network of 3D virtual worlds focused on social connection. In futurism and
-                        science fiction, it is often described as a hypothetical iteration of the Internet as a single,
-                        universal virtual world that is facilitated by the use of virtual and augmented reality
-                        headsets.
-
+                    <Accordion ScrollTrigger={ScrollTrigger} title="What does potential repurchase price mean?">
+                        Parts of your mint fee will flow into a repurchase pool. Once the team NFT you mint wins the
+                        final. You can sell your NFT to the repurchase pool. The repurchase price=total ETH in the pool/
+                        the amount of certain NFT minted
                     </Accordion>
-                    <Accordion ScrollTrigger={ScrollTrigger} title="WHY DO WE NEED ROYALTIES?">
-                        The amount of royalties was fixed at 5% to finance World Cup Memory Club's projects. We have the
-                        ambition to organize multiple events around the world in order to strengthen the community and
-                        build a network of entrepreneurs and investors with the same mindset and common interests.
+                    <Accordion ScrollTrigger={ScrollTrigger} title=" What is Early-bird Compensation ?">
+                        As the final day approaches, people who mint NFT later will have more information and higher
+                        possibility to choose the final champion NFT. Therefore, the early collector should be
+                        compensated.
                     </Accordion>
                 </Box>
                 <Box>
-                    <Accordion ScrollTrigger={ScrollTrigger} title="HOW CAN I USE MY NFT?">
-                        You will be able to use your NFT as an avatar in the Metaverse and our future video game.
-                        Holding also means that you are part of an exclusive network of investors and entrepreneurs.
+                    <Accordion ScrollTrigger={ScrollTrigger} title="How to get Early-bird Compensation?">
+                        There will be a Collect and Burn button on My NFT page. Once you collect your compensation, your
+                        NFT will be burned.
                     </Accordion>
-                    <Accordion ScrollTrigger={ScrollTrigger} title="WHAT ARE THE World Cup Memory?
-">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore deserunt consequatur quisquam
-                        maxime molestias dolores ipsum, exercitationem vel sint quidem aliquam modi quis impedit
-                        corporis unde inventore fugiat provident in.
-                    </Accordion>
-                    <Accordion ScrollTrigger={ScrollTrigger} title="WHAT IS THE FUSION PROCESS?
-">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel enim veritatis iusto officia.
-                        Exercitationem, ducimus reiciendis. Rem, maxime, similique neque minus aliquam dolore doloremque
-                        laboriosam, facilis quibusdam unde sint officia.
+                    <Accordion ScrollTrigger={ScrollTrigger} title="Why are there different mystery boxes?">
+                        Different mystery boxes represent different teams in the World Cup tournament. Only the final
+                        winner team NFT would be revealed.
                     </Accordion>
                 </Box>
             </Container>
