@@ -1,7 +1,5 @@
 import React, {lazy, Suspense} from 'react'
 import styled, {keyframes} from 'styled-components'
-// import CoverVideo from '../CoverVideo'
-// import TypeWriterText from '../TypeWriterText'
 import RoundTextBlack from '../../assets/Rounded-Text-Black.png';
 import Loading from '../Loading';
 
