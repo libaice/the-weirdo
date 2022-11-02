@@ -18,7 +18,7 @@ import {publicProvider} from "wagmi/providers/public";
 
 
 const {chains, provider} = configureChains(
-    [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
+    [chain.mainnet, chain.goerli],
     [alchemyProvider({alchemyId: process.env.ALCHEMY_ID}), publicProvider()]
 );
 const {connectors} = getDefaultWallets({
@@ -43,7 +43,7 @@ function App() {
                         <Home/>
                         <About/>
                         <Roadmap/>
-                        {/*<Mint/>*/}
+                        <Mint/>
                         <Faq/>
                         <Footer/>
                         <ScrollToTop/>{" "}
