@@ -20,10 +20,12 @@ const Title = styled.span`
 
 
 const DropDownHeader = styled("div")`
-  margin-bottom: 1.8em;
+  margin-top: 10em;
+  margin-bottom: 5.8em;
+  margin-left: 19em;
   padding: 0.4em 2em 0.4em 1em;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
-  font-weight: 550;
+  font-weight: 1050;
   font-size: 1rem;
   color: #202020;
   border: 1px solid #e5e5e5;
@@ -47,7 +49,7 @@ const DropDownList = styled("ul")`
   background: #ffffff;
   border: 4px solid #e5e5e5;
   box-sizing: border-box;
-  color: #fd9e46;
+  color: #202020;
   font-size: 1rem;
   font-weight: 550;
 
@@ -68,8 +70,9 @@ const ListItem = styled("li")`
 
 const Mint = () => {
     const {isConnected, address} = useAccount();
-
-    let options = ["Qatar ", "Brazil ", "Belgium ", "France ", "Argentina ", "England ", "Spain ","Portugal ","Mexico ","Netherlands ","Denmark ","Germany ","Uruguay ","Switzerland ","United States ","Croatia <"  ];
+    let options = ["Qatar ", "Brazil ", "Belgium ", "France ", "Argentina ", "England ", "Spain ", "Portugal ", "Mexico ", "Netherlands ", "Denmark ", "Germany ", "Uruguay ", "Switzerland ", "United States ", "Croatia ", "Croatia ",
+        "Senegal ", "Iran ", "Japan ", " Morocco ", "Serbia ", "Poland ", "South Korea ", "Tunisia ", "Cameroon ", "Canada ", "Ecuador ", "Saudi Arabia ", "Ghana ", "Wales ", "Costa Rica ", "Australia "
+    ];
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
 
@@ -103,9 +106,6 @@ const Mint = () => {
                             </DropDownList>
                         </DropDownListContainer>
                     )}
-
-
-                    <ConnectButton/>
                 </DropDownContainer>
 
 
