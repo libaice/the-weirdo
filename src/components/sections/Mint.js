@@ -2,8 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import {useState} from "react";
 
-import {useAccount} from 'wagmi'
+import {ethers} from "ethers";
+
+
+import {useAccount, useContractRead} from 'wagmi'
 import {ConnectButton} from "@rainbow-me/rainbowkit";
+
+
+import Team1 from "../../assets/team-images/1.jpg"
+import Team2 from "../../assets/team-images/2.jpg"
+
 
 const Title = styled.span`
   display: block;
@@ -21,9 +29,9 @@ const Title = styled.span`
 
 const DropDownHeader = styled("div")`
   margin-top: 10em;
-  margin-bottom: 5.8em;
-  margin-left: 19em;
-  padding: 0.4em 2em 0.4em 1em;
+  margin-bottom: 0.1em;
+  margin-left: 20em;
+  padding: 0.4em 0.5em 0.4em 1em;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
   font-weight: 1050;
   font-size: 1rem;
@@ -33,17 +41,17 @@ const DropDownHeader = styled("div")`
 
 const DropDownListContainer = styled("div")`
   position: absolute;
-  z-index: 100;
-  width: 10.5em;
+  z-index: 00;
+  width: 12em;
+  margin-left: 20em;
 `;
 
 const DropDownContainer = styled("div")`
-  width: 15em;
+  width: 32em;
   margin: 15 auto;
 `;
 
 const DropDownList = styled("ul")`
-  padding: 0;
   margin: 0;
   padding-left: 1em;
   background: #ffffff;
@@ -67,6 +75,11 @@ const ListItem = styled("li")`
   }
 `;
 
+const Image = styled.img`
+  width: 12%;
+  margin-left: 20em;
+`;
+
 
 const Mint = () => {
     const {isConnected, address} = useAccount();
@@ -83,18 +96,35 @@ const Mint = () => {
         setIsOpen(false);
         console.log(selectedOption);
     };
+    const contractABI = []
+
+    const {mintFee: getMintFee} = useContractRead({
+        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        contractInterface: [
+            "function publicMint(uint256 _teamId) public payable ",
+            "function getMintFee(uint256 _teamId) public view returns (uint256)"
+        ],
+        functionName: "getMintFee",
+        enabled: isConnected,
+        args: [23],
+        chainId:5,
+        onSuccess(data) {
+            console.log(data.toString())
+        }
+    })
 
 
     return (
         <div>
+            <br/>
             <div>
                 <Title>Minting Page</Title>
-
 
                 <DropDownContainer>
                     <DropDownHeader onClick={toggling}>
                         {selectedOption || "Select One Team "}
                     </DropDownHeader>
+
                     {isOpen && (
                         <DropDownListContainer>
                             <DropDownList>
@@ -110,18 +140,14 @@ const Mint = () => {
 
 
                 <div>
-                    <div className="nft-contract-address"><a
-                        href='https://etherscan.io/' target="blank"
-                        title='world cup'/>xxxxx
-                    </div>
-
+                    <Image src={Team1}></Image>
                 </div>
 
 
-                {isConnected && (<div>the wallet has connected</div>)
+                {/*{isConnected && (<div>the wallet has connected</div>)*/}
 
-                }
-                {!isConnected && (<div>Connect wallet first</div>)}
+                {/*}*/}
+                {/*{!isConnected && (<div>Connect wallet first</div>)}*/}
             </div>
 
 

@@ -165,11 +165,24 @@ const About = () => {
                         Only the mystery box of the final champion will be revealed. In addition, holders of final
                         champion NFTs can sell their NFTs to the repurchase pool.
                     </SubTextLight>
-                    <ButtonContainer>
-                        <ThemeProvider theme={dark}>
-                            <Button text="JOIN OUR DISCORD" link="https://discord.com/invite/Rx6uyNqcVw"/>
-                        </ThemeProvider>
-                    </ButtonContainer>
+
+                    <SubTextLight>
+                        The mint fee consists of three parts.
+                    </SubTextLight>
+                    <SubTextLight>
+                        The first part will flow to repurchase pool, which is 0.001 ETH. As the amount of NFT increase,
+                        the repurchase price for the final champion NFT will increase.
+                    </SubTextLight>
+                    <SubTextLight>
+                        The second part is early birds’ compensation fee, which is 0.000025 ETH each for holders who
+                        mint before you do so. People mint NFT later will have more information and higher possibility
+                        to get the final champion NFT. Therefore, the holders who mint NFT in the early stage should be
+                        compensated.
+                    </SubTextLight>
+                    <SubTextLight>
+                        The final part is creator fee, which is 0.0005ETH
+                    </SubTextLight>
+
                 </Box>
             </Container>
         </Section>
@@ -178,3 +191,9 @@ const About = () => {
 
 
 export default About
+
+//   <ButtonContainer>
+//                         <ThemeProvider theme={dark}>
+//                             <Button text="JOIN OUR DISCORD" link="https://discord.com/invite/Rx6uyNqcVw"/>
+//                         </ThemeProvider>
+//                     </ButtonContainer>
