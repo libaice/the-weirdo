@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 import {ethers} from "ethers";
 
 
-import {useAccount, useContractRead} from 'wagmi'
+import {useAccount, useContractRead, useContractWrite, usePrepareContractWrite} from 'wagmi'
 import {ConnectButton} from "@rainbow-me/rainbowkit";
 
 
@@ -81,6 +81,46 @@ const Image = styled.img`
 `;
 
 
+const Btn = styled.button`
+  background-color: ${({buynow}) =>
+          buynow ? 'hsla(40, 72%, 50%, 1)' : 'hsla(347, 49%, 46%, 1)'};
+  border: 1px solid ${({buynow}) => (buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(0, 0%, 0%, 0.4)')};
+  white-space: nowrap;
+  color: hsla(150, 14%, 97%, 1);
+  cursor: pointer;
+  outline: none;
+  font-size: 1rem;
+  text-shadow: 0.1rem 0.1rem 0.5rem hsla(0, 0%, 0%, 0.5);
+  letter-spacing: 0.1rem;
+  border-radius: 0.5rem;
+  user-select: none;
+  padding: 1.5rem 2rem;
+  margin: 1rem;
+  transition: all 0.1s ease-in;
+
+  ::-moz-focus-inner {
+    border: 0;
+  }
+
+  &:hover {
+    background-color: ${({buynow}) =>
+            buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(347, 49%, 51%, 1)'};
+    ${({buynow}) => buynow && `transform: translateY(-3px)`}
+  }
+
+  &:active {
+    background-color: ${({buynow}) =>
+            buynow ? 'hsla(40, 72%, 35%, 1)' : 'hsla(347, 49%, 26%, 1)'};
+  }
+
+  @media screen and (max-width: 45em) {
+    padding: 1rem 1rem;
+    font-size: 1.5rem;
+    margin: 0.5rem;
+  }
+`
+
+
 const Mint = () => {
     const {isConnected, address} = useAccount();
     let options = ["Qatar ", "Brazil ", "Belgium ", "France ", "Argentina ", "England ", "Spain ", "Portugal ", "Mexico ", "Netherlands ", "Denmark ", "Germany ", "Uruguay ", "Switzerland ", "United States ", "Croatia ", "Croatia ",
@@ -88,6 +128,13 @@ const Mint = () => {
     ];
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
+    const [preSaleOpen, setPreSaleOpen] = useState(false);
+    const [publicSaleOpen, setPublicSaleOpen] = useState(false);
+    const [mintFee, setMintFee] = useState(ethers.BigNumber.from(0));
+
+
+    useEffect(() => {
+    }, [mintFee])
 
     const toggling = () => setIsOpen(!isOpen);
 
@@ -96,23 +143,84 @@ const Mint = () => {
         setIsOpen(false);
         console.log(selectedOption);
     };
-    const contractABI = []
+
+
+    //todo 1. update image by selected option
+    //2. public sale & pre sale
+    //3. useEffect update
+    //4,css style
 
     const {mintFee: getMintFee} = useContractRead({
         addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
         contractInterface: [
-            "function publicMint(uint256 _teamId) public payable ",
             "function getMintFee(uint256 _teamId) public view returns (uint256)"
         ],
         functionName: "getMintFee",
         enabled: isConnected,
         args: [23],
-        chainId:5,
+        chainId: 5,
         onSuccess(data) {
             console.log(data.toString())
+            setMintFee(data)
         }
     })
 
+    const {preSale: isPresale} = useContractRead({
+        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        contractInterface: [
+            "function presaleOpen() public view returns (bool)"
+        ],
+        functionName: "presaleOpen",
+        enabled: isConnected,
+        args: [],
+        chainId: 5,
+        onSuccess(data) {
+            console.log(" presale is ", data.toString())
+            setPreSaleOpen(true)
+
+        }
+    })
+
+    const {publicSale: isPublicSale} = useContractRead({
+        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        contractInterface: [
+            "function publicSaleOpen() public view returns (bool)"
+        ],
+        functionName: "publicSaleOpen",
+        enabled: isConnected,
+        args: [],
+        chainId: 5,
+        onSuccess(data) {
+            console.log(" public sale is ", data.toString())
+            setPublicSaleOpen(true);
+        }
+    })
+
+
+    const {config: pubSaleConfig} = usePrepareContractWrite({
+        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        contractInterface: [
+            "function publicMint(uint256 _teamId) public payable"
+        ],
+        functionName: "publicMint",
+        enabled: (isConnected && isPublicSale),
+        args: [23],
+        chainId: 5,
+        overrides: {
+            value: mintFee,
+        },
+        onSuccess(data) {
+            console.log(" pre write contract successfully  ")
+        }
+    })
+
+    const {write: publicWriteSaleNFT} = useContractWrite({
+        ...pubSaleConfig,
+
+        onSuccess(data) {
+            console.log("mint successfully")
+        }
+    })
 
     return (
         <div>
@@ -143,6 +251,9 @@ const Mint = () => {
                     <Image src={Team1}></Image>
                 </div>
 
+
+                <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>Public Sale</p> :
+                    <p>PreSale </p>} </Btn>
 
                 {/*{isConnected && (<div>the wallet has connected</div>)*/}
 
