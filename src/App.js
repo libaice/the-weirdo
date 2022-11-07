@@ -16,10 +16,13 @@ import {chain, configureChains, createClient, WagmiConfig} from "wagmi";
 import {alchemyProvider} from "wagmi/providers/alchemy";
 import {publicProvider} from "wagmi/providers/public";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const {chains, provider} = configureChains(
-    [chain.mainnet, chain.goerli],
-    [alchemyProvider({alchemyId: process.env.ALCHEMY_ID}), publicProvider()]
+    [ chain.goerli],
+    [alchemyProvider({apiKey: "HzH9yF5U4oRr7pd5vZqLg9FPrj6HwsAt"})]
 );
 const {connectors} = getDefaultWallets({
     appName: "My World Cup App",
@@ -37,6 +40,7 @@ function App() {
         <main>
             <WagmiConfig client={wagmiClient}>
                 <RainbowKitProvider chains={chains}>
+                    <ToastContainer />
                     <GlobalStyles/>
                     <ThemeProvider theme={light}>
                         <Navigation/>
