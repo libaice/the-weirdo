@@ -60,6 +60,7 @@ const Title = styled.span`
 const DropDownHeader = styled("div")`
   margin-top: 10em;
   margin-bottom: 0.1em;
+  //margin-right: 1em;
   margin-left: 20em;
   padding: 0.4em 0.5em 0.4em 1em;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
@@ -77,7 +78,7 @@ const DropDownListContainer = styled("div")`
 `;
 
 const DropDownContainer = styled("div")`
-  width: 32em;
+  width: 43em;
   margin: 15 auto;
 `;
 
@@ -106,7 +107,8 @@ const ListItem = styled("li")`
 `;
 
 const Image = styled.img`
-  width: 22%;
+  width: 30em;
+  margin-top: 10em;
   margin-left: 20em;
 `;
 
@@ -125,8 +127,9 @@ const Btn = styled.button`
   border-radius: 0.5rem;
   user-select: none;
   padding: 1.5rem 2rem;
-  margin: 1rem;
   transition: all 0.1s ease-in;
+  margin-top: 3em;
+  margin-left: 27em;
 
   ::-moz-focus-inner {
     border: 0;
@@ -166,6 +169,15 @@ const Mint = () => {
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
+
+    const [counter, setCounter] = useState(1);
+    const increase = () => {
+        setCounter(count => count + 1);
+    };
+
+    const decrease = () => {
+        setCounter(count => count - 1);
+    };
 
     useEffect(() => {
 
@@ -351,7 +363,7 @@ const Mint = () => {
     const {write: publicWriteSaleNFT, isSuccess} = useContractWrite({
         ...pubSaleConfig,
         onMutate(data) {
-            toastId.current = toast("Please wait...", {isLoading: true});
+            toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
         },
 
         onSuccess(data) {
@@ -397,12 +409,11 @@ const Mint = () => {
             <div>
                 <Title>Minting Page</Title>
 
-                <p> You selected Team Id is {teamId} </p>
+                <div style={{display:'flex',alignItems:'center',marginTop:'10em',justifyContent:'space-between'}}>
                 <DropDownContainer>
                     <DropDownHeader onClick={toggling}>
                         {selectedOption || "Select One Team "}
                     </DropDownHeader>
-
                     {isOpen && (
                         <DropDownListContainer>
                             <DropDownList>
@@ -416,6 +427,15 @@ const Mint = () => {
                     )}
                 </DropDownContainer>
 
+
+                <div style={{marginRight:'20em'}}>
+                    <button onClick={decrease}>-</button>
+                    <span>      </span>
+                    <span>{counter}</span>
+                    <span>      </span>
+                    <button onClick={increase}>+</button>
+                </div>
+                </div>
 
                 <div>
                     <Image src={imageSrc} id="select-picture"></Image>
