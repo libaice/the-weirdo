@@ -67,7 +67,7 @@ const DropDownHeader = styled("div")`
   padding: 0.4em 0.5em 0.4em 1em;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
   font-weight: 1050;
-  font-size: 1rem;
+  font-size: 20px;
   color: #202020;
   border: 1px solid #e5e5e5;
 `;
@@ -76,12 +76,12 @@ const DropDownListContainer = styled("div")`
   position: absolute;
   z-index: 00;
   width: 12em;
-  margin-left: 20em;
+  margin-left: 25em;
 `;
 
 const DropDownContainer = styled("div")`
-  width: 32em;
-  margin: 15 auto;
+  width: 40em;
+  margin-left: 20px;
 `;
 
 const DropDownList = styled("ul")`
@@ -91,7 +91,7 @@ const DropDownList = styled("ul")`
   border: 4px solid #e5e5e5;
   box-sizing: border-box;
   color: #202020;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 550;
 
   &:first-child {
@@ -122,15 +122,15 @@ const Btn = styled.button`
   color: hsla(150, 14%, 97%, 1);
   cursor: pointer;
   outline: none;
-  font-size: 1rem;
+  font-size: 1.5rem;
   text-shadow: 0.1rem 0.1rem 0.5rem hsla(0, 0%, 0%, 0.5);
   letter-spacing: 0.1rem;
   border-radius: 0.5rem;
   user-select: none;
   padding: 1.5rem 2rem;
   transition: all 0.1s ease-in;
-  margin-top: 3em;
-  margin-left: 27em;
+  margin-top: 6em;
+  margin-left: 0em;
 
   ::-moz-focus-inner {
     border: 0;
@@ -154,12 +154,17 @@ const Btn = styled.button`
 
 
 const CounterButton = styled.button`
-  background: black;
-  color: white;
+  color: black;
   border-radius: 7px;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
   margin-top: 30px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+`
+
+const MintBox = styled.div`
+  font-size: 25px;
+  margin-top: 75px;
 `
 
 
@@ -176,14 +181,21 @@ const Mint = () => {
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
-
     const [counter, setCounter] = useState(1);
+
+    const [mintPrice, setMintPrice] = useState("0.1234");
+
+
     const increase = () => {
         setCounter(count => count + 1);
     };
 
     const decrease = () => {
-        setCounter(count => count - 1);
+        if (counter <= 1) {
+            setCounter(1);
+        } else {
+            setCounter(count => count - 1);
+        }
     };
 
     useEffect(() => {
@@ -400,7 +412,7 @@ const Mint = () => {
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <DropDownContainer>
                     <DropDownHeader onClick={toggling}>
-                        {selectedOption || "Select One Team "}
+                        {selectedOption || " Team Select "}
                     </DropDownHeader>
                     {isOpen && (<DropDownListContainer>
                         <DropDownList>
@@ -412,34 +424,30 @@ const Mint = () => {
                 </DropDownContainer>
 
 
-                <div style={{marginRight: '20em', marginTop: '10em'}}>
-                    Mint Amount
+                <div style={{marginRight: '25em', marginTop: '5em', fontSize: "25px"}}>
+                    Mint Amount  &nbsp;&nbsp;&nbsp;&nbsp;
                     <CounterButton onClick={decrease}>-</CounterButton>
+                    &nbsp;&nbsp;
                     <span style={{fontSize: '16px'}}>{counter}</span>
+                    &nbsp;&nbsp;
                     <CounterButton onClick={increase}>+</CounterButton>
                 </div>
             </div>
 
 
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <div
+                style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "530px"}}>
                 <Image src={imageSrc} id="select-picture"></Image>
-                <div style={{marginRight: '20em', marginTop: '10em'}}>
-                    <div>Mint Price <img src={EthereumIco} width="14px"/></div>
-                    <div>Potential Repurchase Price <img src={EthereumIco} width="14px"/></div>
-                    <div>
-                        Total Mint Price <img src={EthereumIco} width="14px" alt="totalMint"/>
-                    </div>
+                <div style={{marginRight: '28em', marginTop: '5em'}}>
+                    <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
+                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice} </MintBox>
+                    <MintBox>
+                        Total Mint Price <img src={EthereumIco} width="14px" alt="totalMint"/>   &nbsp;&nbsp; {mintPrice}
+                    </MintBox>
+                    <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>MINT</p> :
+                        <p>PreSale </p>} </Btn>
                 </div>
-
-
             </div>
-                <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>Public Sale</p> :
-                    <p>PreSale </p>} </Btn>
-
-                {/*{isConnected && (<div>the wallet has connected</div>)*/}
-
-                {/*}*/}
-                {/*{!isConnected && (<div>Connect wallet first</div>)}*/}
         </div>
     )
 }
