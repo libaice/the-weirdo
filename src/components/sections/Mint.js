@@ -39,6 +39,8 @@ import Team30 from "../../assets/team-images/30.jpg"
 import Team31 from "../../assets/team-images/31.jpg"
 import Team32 from "../../assets/team-images/32.jpg"
 
+import EthereumIco from "../../assets/ethereum/eth.jpg";
+
 import {toast, Id} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -78,7 +80,7 @@ const DropDownListContainer = styled("div")`
 `;
 
 const DropDownContainer = styled("div")`
-  width: 43em;
+  width: 32em;
   margin: 15 auto;
 `;
 
@@ -114,8 +116,7 @@ const Image = styled.img`
 
 
 const Btn = styled.button`
-  background-color: ${({buynow}) =>
-          buynow ? 'hsla(40, 72%, 50%, 1)' : 'hsla(347, 49%, 46%, 1)'};
+  background-color: ${({buynow}) => buynow ? 'hsla(40, 72%, 50%, 1)' : 'hsla(347, 49%, 46%, 1)'};
   border: 1px solid ${({buynow}) => (buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(0, 0%, 0%, 0.4)')};
   white-space: nowrap;
   color: hsla(150, 14%, 97%, 1);
@@ -136,14 +137,12 @@ const Btn = styled.button`
   }
 
   &:hover {
-    background-color: ${({buynow}) =>
-            buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(347, 49%, 51%, 1)'};
+    background-color: ${({buynow}) => buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(347, 49%, 51%, 1)'};
     ${({buynow}) => buynow && `transform: translateY(-3px)`}
   }
 
   &:active {
-    background-color: ${({buynow}) =>
-            buynow ? 'hsla(40, 72%, 35%, 1)' : 'hsla(347, 49%, 26%, 1)'};
+    background-color: ${({buynow}) => buynow ? 'hsla(40, 72%, 35%, 1)' : 'hsla(347, 49%, 26%, 1)'};
   }
 
   @media screen and (max-width: 45em) {
@@ -154,11 +153,19 @@ const Btn = styled.button`
 `
 
 
+const CounterButton = styled.button`
+  background: black;
+  color: white;
+  border-radius: 7px;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 30px;
+`
+
+
 const Mint = () => {
     const {isConnected, address} = useAccount();
-    let options = ["Qatar", "Brazil", "Belgium", "France", "Argentina", "England", "Spain", "Portugal", "Mexico", "Netherlands", "Denmark", "Germany", "Uruguay", "Switzerland", "America", "Croatia",
-        "Senegal", "Iran", "Japan", "Morocco", "Serbia", "Poland", "South Korea", "Tunisia", "Cameroon", "Canada", "Ecuador", "Saudi Arabia", "Ghana", "Wales", "Costa Rica", "Australia"
-    ];
+    let options = ["Qatar", "Brazil", "Belgium", "France", "Argentina", "England", "Spain", "Portugal", "Mexico", "Netherlands", "Denmark", "Germany", "Uruguay", "Switzerland", "America", "Croatia", "Senegal", "Iran", "Japan", "Morocco", "Serbia", "Poland", "South Korea", "Tunisia", "Cameroon", "Canada", "Ecuador", "Saudi Arabia", "Ghana", "Wales", "Costa Rica", "Australia"];
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [preSaleOpen, setPreSaleOpen] = useState(false);
@@ -289,16 +296,13 @@ const Mint = () => {
     };
 
 
-    //1. update image by selected option DONE！
     //todo 2. public sale & pre sale
     //3. useEffect update
     //4,css style
 
     const {mintFee: getMintFee, refetch: updateMintFee} = useContractRead({
         addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function getMintFee(uint256 _teamId) public view returns (uint256)"
-        ],
+        contractInterface: ["function getMintFee(uint256 _teamId) public view returns (uint256)"],
         functionName: "getMintFee",
         enabled: isConnected,
         args: [teamId],
@@ -312,9 +316,7 @@ const Mint = () => {
 
     const {preSale: isPresale} = useContractRead({
         addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function presaleOpen() public view returns (bool)"
-        ],
+        contractInterface: ["function presaleOpen() public view returns (bool)"],
         functionName: "presaleOpen",
         enabled: isConnected,
         args: [],
@@ -329,9 +331,7 @@ const Mint = () => {
 
     const {publicSale: isPublicSale} = useContractRead({
         addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function publicSaleOpen() public view returns (bool)"
-        ],
+        contractInterface: ["function publicSaleOpen() public view returns (bool)"],
         functionName: "publicSaleOpen",
         enabled: isConnected,
         args: [],
@@ -342,12 +342,9 @@ const Mint = () => {
         }
     })
 
-
     const {config: pubSaleConfig} = usePrepareContractWrite({
         addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function publicMint(uint256 _teamId) public payable"
-        ],
+        contractInterface: ["function publicMint(uint256 _teamId) public payable"],
         functionName: "publicMint",
         enabled: (isConnected && isPublicSale),
         args: [teamId],
@@ -361,17 +358,14 @@ const Mint = () => {
     })
 
     const {write: publicWriteSaleNFT, isSuccess} = useContractWrite({
-        ...pubSaleConfig,
-        onMutate(data) {
+        ...pubSaleConfig, onMutate(data) {
             toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
         },
 
         onSuccess(data) {
             console.log("public Mint ", data)
             addRecentTransaction({
-                hash: data.hash,
-                description: `publicMintNFT`,
-                confirmations: 1
+                hash: data.hash, description: `publicMintNFT`, confirmations: 1
             });
             data
                 .wait(1)
@@ -388,10 +382,7 @@ const Mint = () => {
                 .catch((err) => {
                     console.error(err);
                     toast.update(toastId.current, {
-                        render: err,
-                        type: toast.TYPE.ERROR,
-                        isLoading: false,
-                        autoClose: 3_000
+                        render: err, type: toast.TYPE.ERROR, isLoading: false, autoClose: 3_000
                     })
                 });
         },
@@ -402,46 +393,46 @@ const Mint = () => {
 
     })
 
-
     return (
         <div>
-            <br/>
-            <div>
-                <Title>Minting Page</Title>
+            <Title>Minting Page</Title>
 
-                <div style={{display:'flex',alignItems:'center',marginTop:'10em',justifyContent:'space-between'}}>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <DropDownContainer>
                     <DropDownHeader onClick={toggling}>
                         {selectedOption || "Select One Team "}
                     </DropDownHeader>
-                    {isOpen && (
-                        <DropDownListContainer>
-                            <DropDownList>
-                                {options.map(option => (
-                                    <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
-                                        {option}
-                                    </ListItem>
-                                ))}
-                            </DropDownList>
-                        </DropDownListContainer>
-                    )}
+                    {isOpen && (<DropDownListContainer>
+                        <DropDownList>
+                            {options.map(option => (<ListItem onClick={onOptionClicked(option)} key={Math.random()}>
+                                {option}
+                            </ListItem>))}
+                        </DropDownList>
+                    </DropDownListContainer>)}
                 </DropDownContainer>
 
 
-                <div style={{marginRight:'20em'}}>
-                    <button onClick={decrease}>-</button>
-                    <span>      </span>
-                    <span>{counter}</span>
-                    <span>      </span>
-                    <button onClick={increase}>+</button>
+                <div style={{marginRight: '20em', marginTop: '10em'}}>
+                    Mint Amount
+                    <CounterButton onClick={decrease}>-</CounterButton>
+                    <span style={{fontSize: '16px'}}>{counter}</span>
+                    <CounterButton onClick={increase}>+</CounterButton>
                 </div>
-                </div>
-
-                <div>
-                    <Image src={imageSrc} id="select-picture"></Image>
-                </div>
+            </div>
 
 
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <Image src={imageSrc} id="select-picture"></Image>
+                <div style={{marginRight: '20em', marginTop: '10em'}}>
+                    <div>Mint Price <img src={EthereumIco} width="14px"/></div>
+                    <div>Potential Repurchase Price <img src={EthereumIco} width="14px"/></div>
+                    <div>
+                        Total Mint Price <img src={EthereumIco} width="14px" alt="totalMint"/>
+                    </div>
+                </div>
+
+
+            </div>
                 <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>Public Sale</p> :
                     <p>PreSale </p>} </Btn>
 
@@ -449,10 +440,8 @@ const Mint = () => {
 
                 {/*}*/}
                 {/*{!isConnected && (<div>Connect wallet first</div>)}*/}
-            </div>
-
-
-        </div>)
+        </div>
+    )
 }
 
 export default Mint;
