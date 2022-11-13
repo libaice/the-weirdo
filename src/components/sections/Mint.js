@@ -46,6 +46,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const Title = styled.span`
+  margin-top: 60px;
   display: block;
   font-size: ${(props) => props.theme.fontxl};
   text-transform: capitalize;
@@ -58,6 +59,8 @@ const Title = styled.span`
   }
 `;
 
+const Section = styled.section`
+`
 
 const DropDownHeader = styled("div")`
   margin-top: 10em;
@@ -181,21 +184,29 @@ const Mint = () => {
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
-    const [counter, setCounter] = useState(1);
+    const [mintAmount, setMintAmount] = useState(1);
 
     const [mintPrice, setMintPrice] = useState("0.1234");
+    const [repurchasePrice, setRepurchasePrice] = useState("0.1234");
+    const [totalMintPrice, setTotalMintPrice] = useState("0.1234");
 
 
     const increase = () => {
-        setCounter(count => count + 1);
+        setMintAmount(count => count + 1);
+        console.log(mintFee * (mintAmount + 1))
+        console.log(ethers.utils.formatUnits(mintFee * (mintAmount + 1)))
+        setTotalMintPrice(ethers.utils.formatUnits(mintFee * (mintAmount + 1)))
     };
 
     const decrease = () => {
-        if (counter <= 1) {
-            setCounter(1);
+        if (mintAmount <= 1) {
+            setMintAmount(1);
+            setTotalMintPrice(ethers.utils.formatUnits(mintFee))
         } else {
-            setCounter(count => count - 1);
+            setMintAmount(count => count - 1);
+            setTotalMintPrice(ethers.utils.formatUnits(mintFee * (mintAmount - 1)))
         }
+
     };
 
     useEffect(() => {
@@ -322,9 +333,27 @@ const Mint = () => {
         onSuccess(data) {
             console.log(data.toString())
             setMintFee(data)
-            // updateMintFee()
+            setMintPrice(ethers.utils.formatUnits(data))
+            setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
         }
     })
+
+
+    // const {mintFee: getManyMintFee, refetch: updateManyMintFee} = useContractRead({
+    //     addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+    //     contractInterface: ["function getManyMintFee(uint256 _teamId, uint256 amount)  public view returns (uint256)"],
+    //     functionName: "getManyMintFee",
+    //     enabled: isConnected,
+    //     args: [teamId, mintAmount],
+    //     chainId: 5,
+    //     onSuccess(data) {
+    //         console.log(data.toString())
+    //         setMintFee(data)
+    //         setMintPrice(ethers.utils.formatUnits(data))
+    //         setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
+    //     }
+    // })
+
 
     const {preSale: isPresale} = useContractRead({
         addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
@@ -406,7 +435,7 @@ const Mint = () => {
     })
 
     return (
-        <div>
+        <Section id="mint">
             <Title>Minting Page</Title>
 
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -428,7 +457,7 @@ const Mint = () => {
                     Mint Amount  &nbsp;&nbsp;&nbsp;&nbsp;
                     <CounterButton onClick={decrease}>-</CounterButton>
                     &nbsp;&nbsp;
-                    <span style={{fontSize: '16px'}}>{counter}</span>
+                    <span style={{fontSize: '16px'}}>{mintAmount}</span>
                     &nbsp;&nbsp;
                     <CounterButton onClick={increase}>+</CounterButton>
                 </div>
@@ -440,15 +469,17 @@ const Mint = () => {
                 <Image src={imageSrc} id="select-picture"></Image>
                 <div style={{marginRight: '28em', marginTop: '5em'}}>
                     <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
-                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice} </MintBox>
+                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice}
+                    </MintBox>
                     <MintBox>
-                        Total Mint Price <img src={EthereumIco} width="14px" alt="totalMint"/>   &nbsp;&nbsp; {mintPrice}
+                        Total Mint Price <img src={EthereumIco} width="14px"
+                                              alt="totalMint"/>   &nbsp;&nbsp; {totalMintPrice}
                     </MintBox>
                     <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>MINT</p> :
                         <p>PreSale </p>} </Btn>
                 </div>
             </div>
-        </div>
+        </Section>
     )
 }
 
