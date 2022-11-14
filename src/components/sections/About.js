@@ -151,7 +151,8 @@ const About = () => {
             <Container>
                 <Box>
                     <Suspense fallback={<Loading/>}>
-                        <Carousel/> </Suspense> </Box>
+                        <Carousel/> </Suspense>
+                </Box>
                 <Box>
                     <Title>
                         Welcome To The <br/> World Cup Memory

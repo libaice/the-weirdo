@@ -179,8 +179,9 @@ const Mint = () => {
     const [preSaleOpen, setPreSaleOpen] = useState(false);
     const [publicSaleOpen, setPublicSaleOpen] = useState(false);
     const [mintFee, setMintFee] = useState(ethers.BigNumber.from(0));
-    const [teamId, setTeamId] = useState(0);
+    const [teamId, setTeamId] = useState(1);
     const [imageSrc, setImageSrc] = useState(Team1)
+    const nftContractAddress = '0x297768507c38C5966512c60cE01dC45674189138';
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
@@ -324,7 +325,7 @@ const Mint = () => {
     //4,css style
 
     const {mintFee: getMintFee, refetch: updateMintFee} = useContractRead({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        addressOrName: nftContractAddress,
         contractInterface: ["function getMintFee(uint256 _teamId) public view returns (uint256)"],
         functionName: "getMintFee",
         enabled: isConnected,
@@ -356,7 +357,7 @@ const Mint = () => {
 
 
     const {preSale: isPresale} = useContractRead({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        addressOrName: nftContractAddress,
         contractInterface: ["function presaleOpen() public view returns (bool)"],
         functionName: "presaleOpen",
         enabled: isConnected,
@@ -371,7 +372,7 @@ const Mint = () => {
     })
 
     const {publicSale: isPublicSale} = useContractRead({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        addressOrName: nftContractAddress,
         contractInterface: ["function publicSaleOpen() public view returns (bool)"],
         functionName: "publicSaleOpen",
         enabled: isConnected,
@@ -384,7 +385,7 @@ const Mint = () => {
     })
 
     const {config: pubSaleConfig} = usePrepareContractWrite({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+        addressOrName: nftContractAddress,
         contractInterface: ["function publicMint(uint256 _teamId) public payable"],
         functionName: "publicMint",
         enabled: (isConnected && isPublicSale),
@@ -402,7 +403,6 @@ const Mint = () => {
         ...pubSaleConfig, onMutate(data) {
             toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
         },
-
         onSuccess(data) {
             console.log("public Mint ", data)
             addRecentTransaction({
@@ -427,7 +427,6 @@ const Mint = () => {
                     })
                 });
         },
-
         onError(err) {
             toast.error(JSON.stringify(err.reason))
         }
