@@ -402,7 +402,13 @@ const Mint = () => {
             setPreSaleOpen(true)
         },
         onError(err) {
-            toast.error(JSON.stringify(err))
+            setPreSaleOpen(false)
+            toast.update(toastId.current, {
+                render: "the presale has finished, start to MINT",
+                type: toast.TYPE.SUCCESS,
+                isLoading: false,
+                autoClose: 3_000
+            })
         }
     })
 
@@ -417,6 +423,8 @@ const Mint = () => {
             console.log(" public sale is ", data.toString())
             if (data) {
                 setPublicSaleOpen(true)
+            }else {
+                setPreSaleOpen(false);
             }
         }
     })
@@ -425,7 +433,7 @@ const Mint = () => {
         addressOrName: nftContractAddress,
         contractInterface: ["function publicMint(uint256 _teamId) public payable"],
         functionName: "publicMint",
-        enabled: (isConnected && isPublicSale),
+        enabled: (isConnected && publicSaleOpen),
         args: [teamId],
         chainId: 5,
         overrides: {
@@ -440,7 +448,7 @@ const Mint = () => {
         addressOrName: nftContractAddress,
         contractInterface: [" function presaleMint(uint256 _teamId, bytes32[] calldata merkleProof) public payable"],
         functionName: "presaleMint",
-        enabled: (isConnected && !isPublicSale),
+        enabled: (isConnected && !publicSaleOpen),
         args: [teamId, merkleProofList],
         chainId: 5,
         overrides: {
@@ -528,10 +536,6 @@ const Mint = () => {
         }
 
     })
-
-    const hello = () => {
-        console.log("hello.....")
-    }
 
 
     const writeToContract = () => {
