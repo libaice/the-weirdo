@@ -180,7 +180,7 @@ const Mint = () => {
     const [preSaleOpen, setPreSaleOpen] = useState(false);
     const [publicSaleOpen, setPublicSaleOpen] = useState(false);
     const [mintFee, setMintFee] = useState(ethers.BigNumber.from(0));
-    const [manyMintFee, setManyMintFee] = useState("0.001525");
+    const [manyMintFee, setManyMintFee] = useState(ethers.BigNumber.from(0));
     const [teamId, setTeamId] = useState(1);
     const [imageSrc, setImageSrc] = useState(Team1)
     const nftContractAddress = '0x297768507c38C5966512c60cE01dC45674189138';
@@ -190,7 +190,8 @@ const Mint = () => {
     const addRecentTransaction = useAddRecentTransaction();
     const [mintAmount, setMintAmount] = useState(1);
 
-    const [mintPrice, setMintPrice] = useState("0.1234");
+    const [mintPrice, setMintPrice] = useState("0.001525");
+    const [mintManyPrice, setMintManyPrice] = useState("0.001525");
     const [repurchasePrice, setRepurchasePrice] = useState("0.1234");
     const [merkleProofList, setMerkleProofList] = useState([]);
 
@@ -373,7 +374,8 @@ const Mint = () => {
             if (mintAmount === 1) {
                 console.log(" mint many token need  ", data)
             }
-            setManyMintFee(ethers.utils.formatEther(data))
+            setManyMintFee(data)
+            setMintManyPrice(ethers.utils.formatUnits(data))
         }
     })
 
@@ -423,7 +425,7 @@ const Mint = () => {
             console.log(" public sale is ", data.toString())
             if (data) {
                 setPublicSaleOpen(true)
-            }else {
+            } else {
                 setPreSaleOpen(false);
             }
         }
@@ -443,6 +445,23 @@ const Mint = () => {
             console.log(" pre write contract successfully  ")
         }
     })
+
+
+    const {config: pubsaleManyConfig} = usePrepareContractWrite({
+        addressOrName: nftContractAddress,
+        contractInterface: ["function publicManyMint(uint256 amount, uint256 _teamId) public payable"],
+        functionName: "publicManyMint",
+        enabled: (isConnected && publicSaleOpen && (mintAmount !== 1)),
+        args: [mintAmount, teamId],
+        chainId: 5,
+        overrides: {
+            value: manyMintFee,
+        },
+        onSuccess(data) {
+            console.log(" prepare write mint many nft  ")
+        }
+    })
+
 
     const {config: preSaleConfig} = usePrepareContractWrite({
         addressOrName: nftContractAddress,
@@ -470,6 +489,42 @@ const Mint = () => {
 
     const {write: publicWriteSaleNFT, isSuccess} = useContractWrite({
         ...pubSaleConfig, onMutate(data) {
+            toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
+        },
+        onSuccess(data) {
+            console.log("public Mint ", data)
+            addRecentTransaction({
+                hash: data.hash, description: `publicMintNFT`, confirmations: 1
+            });
+            data
+                .wait(1)
+                .then((res) => {
+                    console.warn("transaction confirmed ", res);
+                    toast.update(toastId.current, {
+                        render: "public sale mint successfully",
+                        type: toast.TYPE.SUCCESS,
+                        isLoading: false,
+                        autoClose: 3_000
+                    })
+                    updateMintFee()
+                    updateManyMintFee()
+                })
+                .catch((err) => {
+                    console.error(err);
+                    toast.update(toastId.current, {
+                        render: err, type: toast.TYPE.ERROR, isLoading: false, autoClose: 3_000
+                    })
+                });
+        },
+        onError(err) {
+            toast.error(JSON.stringify(err.reason))
+        }
+
+    })
+
+
+    const {write: publicWriteManySaleNFT} = useContractWrite({
+        ...pubsaleManyConfig, onMutate(data) {
             toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
         },
         onSuccess(data) {
@@ -534,18 +589,21 @@ const Mint = () => {
         onError(err) {
             toast.error(JSON.stringify(err.reason))
         }
-
     })
 
 
     const writeToContract = () => {
         if (publicSaleOpen) {
-            publicWriteSaleNFT()
+            if (mintAmount === 1) {
+                publicWriteSaleNFT()
+            } else {
+                publicWriteManySaleNFT()
+            }
         } else {
             preSaleWriteSaleNFT()
         }
-    }
 
+    }
 
     return (
         <Section id="mint">
@@ -586,7 +644,7 @@ const Mint = () => {
                     </MintBox>
                     <MintBox>
                         Total Mint Price <img src={EthereumIco} width="14px"
-                                              alt="totalMint"/>   &nbsp;&nbsp; {manyMintFee}
+                                              alt="totalMint"/>   &nbsp;&nbsp; {mintManyPrice}
                     </MintBox>
 
 
