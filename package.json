@@ -13,6 +13,7 @@
     "dotenv": "^16.0.3",
     "ethers": "^5.7.1",
     "gsap": "^3.9.1",
+    "merkletreejs": "^0.3.3",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-confetti": "^6.0.1",

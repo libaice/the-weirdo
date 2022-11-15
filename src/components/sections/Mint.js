@@ -43,7 +43,8 @@ import EthereumIco from "../../assets/ethereum/eth.jpg";
 
 import {toast, Id} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import {MerkleTree} from "merkletreejs";
+const {keccak256} = ethers.utils;
 
 const Title = styled.span`
   margin-top: 60px;
@@ -179,9 +180,11 @@ const Mint = () => {
     const [preSaleOpen, setPreSaleOpen] = useState(false);
     const [publicSaleOpen, setPublicSaleOpen] = useState(false);
     const [mintFee, setMintFee] = useState(ethers.BigNumber.from(0));
+    const [manyMintFee, setManyMintFee] = useState(ethers.BigNumber.from(0));
     const [teamId, setTeamId] = useState(1);
     const [imageSrc, setImageSrc] = useState(Team1)
     const nftContractAddress = '0x297768507c38C5966512c60cE01dC45674189138';
+    const repurchasePoolContractAddress = '0x83E78DCB0DA69616f824A8a208ebd7DD357b346c';
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
@@ -189,30 +192,50 @@ const Mint = () => {
 
     const [mintPrice, setMintPrice] = useState("0.1234");
     const [repurchasePrice, setRepurchasePrice] = useState("0.1234");
-    const [totalMintPrice, setTotalMintPrice] = useState("0.1234");
+    const [merkleProofList, setMerkleProofList] = useState([]);
 
+    const [repurchasePoolBalance, setRepurchasePoolBalance] = useState(ethers.BigNumber.from(0));
+
+
+    const mainnetWhiteList = [
+        "0x2454e035f1d0D4f5d39bb2ffceF2F4bE4590cCB9",
+        "0x3fb129c2Fa44cCB377283771A5f708CaBfA63C17",
+        "0x65335099E4879326b9C612C4902066DA1ff83A6E",
+        "0x888C3f4274BF8eD3345F349B69eD36F438e12793",
+        "0x2B7ED840de28e43f2868690aa36310B02b8d0901",
+        "0x856E05db0DCC85b4F2D037698f685b4c35b487FB",
+        "0xE69181C78B0dB323E36e9709c6032F8338C0AA8B",
+        "0x244dfba48b001a22269fa25373dba7f0293c01e2",
+        "0xA0b790C492b4857aF1e3Ab1e384f03eD973D5268",
+        "0x8A7C208832500f74AaA521E84FF8a588877Fd332"
+    ]
+
+    // const leaves = mainnetWhiteList.map((address) => keccak256(address));
+    // const tree = new MerkleTree(leaves, keccak256, {sort: true});
 
     const increase = () => {
         setMintAmount(count => count + 1);
         console.log(mintFee * (mintAmount + 1))
         console.log(ethers.utils.formatUnits(mintFee * (mintAmount + 1)))
-        setTotalMintPrice(ethers.utils.formatUnits(mintFee * (mintAmount + 1)))
     };
 
     const decrease = () => {
         if (mintAmount <= 1) {
             setMintAmount(1);
-            setTotalMintPrice(ethers.utils.formatUnits(mintFee))
         } else {
             setMintAmount(count => count - 1);
-            setTotalMintPrice(ethers.utils.formatUnits(mintFee * (mintAmount - 1)))
         }
 
     };
 
     useEffect(() => {
-
-    }, [mintFee])
+        // mainnetWhiteList.map((item) => {
+        //     if (item === address) {
+        //         setMerkleProofList(tree.getHexProof(keccak256(address)))
+        //     }
+        // })
+        console.log(merkleProofList)
+    }, [mintFee, address])
 
     const toggling = () => setIsOpen(!isOpen);
 
@@ -335,25 +358,38 @@ const Mint = () => {
             console.log(data.toString())
             setMintFee(data)
             setMintPrice(ethers.utils.formatUnits(data))
-            setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
+            // setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
         }
     })
 
 
-    // const {mintFee: getManyMintFee, refetch: updateManyMintFee} = useContractRead({
-    //     addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-    //     contractInterface: ["function getManyMintFee(uint256 _teamId, uint256 amount)  public view returns (uint256)"],
-    //     functionName: "getManyMintFee",
-    //     enabled: isConnected,
-    //     args: [teamId, mintAmount],
-    //     chainId: 5,
-    //     onSuccess(data) {
-    //         console.log(data.toString())
-    //         setMintFee(data)
-    //         setMintPrice(ethers.utils.formatUnits(data))
-    //         setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
-    //     }
-    // })
+    const {mintFee: getManyMintFee, refetch: updateManyMintFee} = useContractRead({
+        addressOrName: nftContractAddress,
+        contractInterface: ["function getManyMintFee(uint256 _teamId, uint256 amount)public view returns (uint256)"],
+        functionName: "getManyMintFee",
+        enabled: isConnected,
+        args: [teamId, mintAmount],
+        chainId: 5,
+        onSuccess(data) {
+            if (mintAmount === 1) {
+                setManyMintFee(ethers.utils.formatUnits(data))
+            }
+        }
+    })
+
+
+    const {} = useContractRead({
+        addressOrName: repurchasePoolBalance,
+        contractInterface: ["function getContractBalance() public view returns(uint256)"],
+        functionName: "getContractBalance",
+        enabled: isConnected,
+        args: [],
+        chainId: 5,
+        onSuccess(data) {
+            setRepurchasePoolBalance(ethers.utils.formatUnits(data))
+        }
+    })
+
 
 
     const {preSale: isPresale} = useContractRead({
@@ -380,7 +416,9 @@ const Mint = () => {
         chainId: 5,
         onSuccess(data) {
             console.log(" public sale is ", data.toString())
-            setPublicSaleOpen(true);
+            if (data) {
+                setPublicSaleOpen(true)
+            }
         }
     })
 
@@ -396,6 +434,21 @@ const Mint = () => {
         },
         onSuccess(data) {
             console.log(" pre write contract successfully  ")
+        }
+    })
+
+    const {config: preSaleConfig} = usePrepareContractWrite({
+        addressOrName: nftContractAddress,
+        contractInterface: [" function presaleMint(uint256 _teamId, bytes32[] calldata merkleProof) public payable"],
+        functionName: "presaleMint",
+        enabled: (isConnected && !isPublicSale),
+        args: [teamId, merkleProofList],
+        chainId: 5,
+        overrides: {
+            value: mintFee,
+        },
+        onSuccess(data) {
+            console.log(" presale write contract successfully  ")
         }
     })
 
@@ -433,6 +486,55 @@ const Mint = () => {
 
     })
 
+
+    const {write: preSaleWriteSaleNFT} = useContractWrite({
+        ...preSaleConfig, onMutate(data) {
+            toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
+        },
+        onSuccess(data) {
+            console.log("public Mint ", data)
+            addRecentTransaction({
+                hash: data.hash, description: `publicMintNFT`, confirmations: 1
+            });
+            data
+                .wait(1)
+                .then((res) => {
+                    console.warn("transaction confirmed ", res);
+                    toast.update(toastId.current, {
+                        render: "public sale mint successfully",
+                        type: toast.TYPE.SUCCESS,
+                        isLoading: false,
+                        autoClose: 3_000
+                    })
+                    updateMintFee()
+                })
+                .catch((err) => {
+                    console.error(err);
+                    toast.update(toastId.current, {
+                        render: err, type: toast.TYPE.ERROR, isLoading: false, autoClose: 3_000
+                    })
+                });
+        },
+        onError(err) {
+            toast.error(JSON.stringify(err.reason))
+        }
+
+    })
+
+    const hello = () => {
+        console.log("hello.....")
+    }
+
+
+    const writeToContract = () => {
+        if (publicSaleOpen) {
+            publicWriteSaleNFT()
+        } else {
+            preSaleWriteSaleNFT()
+        }
+    }
+
+
     return (
         <Section id="mint">
             <Title>Minting Page</Title>
@@ -465,19 +567,26 @@ const Mint = () => {
 
             <div
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "530px"}}>
-                <Image src={imageSrc} id="select-picture"></Image>
+                {/*<Image src={imageSrc} id="select-picture"></Image>*/}
                 <div style={{marginRight: '28em', marginTop: '5em'}}>
                     <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
                     <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice}
                     </MintBox>
-                    <MintBox>
-                        Total Mint Price <img src={EthereumIco} width="14px"
-                                              alt="totalMint"/>   &nbsp;&nbsp; {totalMintPrice}
-                    </MintBox>
-                    <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>MINT</p> :
-                        <p>PreSale </p>} </Btn>
+                    {/*<MintBox>*/}
+                    {/*    Total Mint Price <img src={EthereumIco} width="14px"*/}
+                    {/*                          alt="totalMint"/>   &nbsp;&nbsp; {manyMintFee}*/}
+                    {/*</MintBox>*/}
+
+
+                    <div> {manyMintFee} </div>
+
+                    <Btn type="button" buynow onClick={writeToContract}> {publicSaleOpen ? <p>MINT</p> :
+                        <p>PreSale </p>}
+                    </Btn>
                 </div>
             </div>
+            <button onClick={hello}> Hello world + {publicSaleOpen.toString()} {true.toString()} + {merkleProofList} </button>
+
         </Section>
     )
 }
