@@ -14,14 +14,13 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import {chain, configureChains, createClient, WagmiConfig} from "wagmi";
 import {alchemyProvider} from "wagmi/providers/alchemy";
-import {publicProvider} from "wagmi/providers/public";
 
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
 const {chains, provider} = configureChains(
-    [ chain.goerli],
+    [chain.goerli],
     [alchemyProvider({apiKey: "HzH9yF5U4oRr7pd5vZqLg9FPrj6HwsAt"})]
 );
 const {connectors} = getDefaultWallets({

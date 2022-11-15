@@ -39,11 +39,14 @@ import Team30 from "../../assets/team-images/30.jpg"
 import Team31 from "../../assets/team-images/31.jpg"
 import Team32 from "../../assets/team-images/32.jpg"
 
+import EthereumIco from "../../assets/ethereum/eth.jpg";
+
 import {toast, Id} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
 const Title = styled.span`
+  margin-top: 60px;
   display: block;
   font-size: ${(props) => props.theme.fontxl};
   text-transform: capitalize;
@@ -56,6 +59,8 @@ const Title = styled.span`
   }
 `;
 
+const Section = styled.section`
+`
 
 const DropDownHeader = styled("div")`
   margin-top: 10em;
@@ -65,7 +70,7 @@ const DropDownHeader = styled("div")`
   padding: 0.4em 0.5em 0.4em 1em;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
   font-weight: 1050;
-  font-size: 1rem;
+  font-size: 20px;
   color: #202020;
   border: 1px solid #e5e5e5;
 `;
@@ -74,12 +79,12 @@ const DropDownListContainer = styled("div")`
   position: absolute;
   z-index: 00;
   width: 12em;
-  margin-left: 20em;
+  margin-left: 25em;
 `;
 
 const DropDownContainer = styled("div")`
-  width: 43em;
-  margin: 15 auto;
+  width: 40em;
+  margin-left: 20px;
 `;
 
 const DropDownList = styled("ul")`
@@ -89,7 +94,7 @@ const DropDownList = styled("ul")`
   border: 4px solid #e5e5e5;
   box-sizing: border-box;
   color: #202020;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 550;
 
   &:first-child {
@@ -114,36 +119,33 @@ const Image = styled.img`
 
 
 const Btn = styled.button`
-  background-color: ${({buynow}) =>
-          buynow ? 'hsla(40, 72%, 50%, 1)' : 'hsla(347, 49%, 46%, 1)'};
+  background-color: ${({buynow}) => buynow ? 'hsla(40, 72%, 50%, 1)' : 'hsla(347, 49%, 46%, 1)'};
   border: 1px solid ${({buynow}) => (buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(0, 0%, 0%, 0.4)')};
   white-space: nowrap;
   color: hsla(150, 14%, 97%, 1);
   cursor: pointer;
   outline: none;
-  font-size: 1rem;
+  font-size: 1.5rem;
   text-shadow: 0.1rem 0.1rem 0.5rem hsla(0, 0%, 0%, 0.5);
   letter-spacing: 0.1rem;
   border-radius: 0.5rem;
   user-select: none;
   padding: 1.5rem 2rem;
   transition: all 0.1s ease-in;
-  margin-top: 3em;
-  margin-left: 27em;
+  margin-top: 6em;
+  margin-left: 0em;
 
   ::-moz-focus-inner {
     border: 0;
   }
 
   &:hover {
-    background-color: ${({buynow}) =>
-            buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(347, 49%, 51%, 1)'};
+    background-color: ${({buynow}) => buynow ? 'hsla(40, 72%, 60%, 1)' : 'hsla(347, 49%, 51%, 1)'};
     ${({buynow}) => buynow && `transform: translateY(-3px)`}
   }
 
   &:active {
-    background-color: ${({buynow}) =>
-            buynow ? 'hsla(40, 72%, 35%, 1)' : 'hsla(347, 49%, 26%, 1)'};
+    background-color: ${({buynow}) => buynow ? 'hsla(40, 72%, 35%, 1)' : 'hsla(347, 49%, 26%, 1)'};
   }
 
   @media screen and (max-width: 45em) {
@@ -154,29 +156,58 @@ const Btn = styled.button`
 `
 
 
+const CounterButton = styled.button`
+  color: black;
+  border-radius: 7px;
+  padding: 10px;
+  font-size: 20px;
+  margin-top: 30px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+`
+
+const MintBox = styled.div`
+  font-size: 25px;
+  margin-top: 75px;
+`
+
+
 const Mint = () => {
     const {isConnected, address} = useAccount();
-    let options = ["Qatar", "Brazil", "Belgium", "France", "Argentina", "England", "Spain", "Portugal", "Mexico", "Netherlands", "Denmark", "Germany", "Uruguay", "Switzerland", "America", "Croatia",
-        "Senegal", "Iran", "Japan", "Morocco", "Serbia", "Poland", "South Korea", "Tunisia", "Cameroon", "Canada", "Ecuador", "Saudi Arabia", "Ghana", "Wales", "Costa Rica", "Australia"
-    ];
+    let options = ["Qatar", "Brazil", "Belgium", "France", "Argentina", "England", "Spain", "Portugal", "Mexico", "Netherlands", "Denmark", "Germany", "Uruguay", "Switzerland", "America", "Croatia", "Senegal", "Iran", "Japan", "Morocco", "Serbia", "Poland", "South Korea", "Tunisia", "Cameroon", "Canada", "Ecuador", "Saudi Arabia", "Ghana", "Wales", "Costa Rica", "Australia"];
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [preSaleOpen, setPreSaleOpen] = useState(false);
     const [publicSaleOpen, setPublicSaleOpen] = useState(false);
     const [mintFee, setMintFee] = useState(ethers.BigNumber.from(0));
-    const [teamId, setTeamId] = useState(0);
+    const [teamId, setTeamId] = useState(1);
     const [imageSrc, setImageSrc] = useState(Team1)
+    const nftContractAddress = '0x297768507c38C5966512c60cE01dC45674189138';
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
+    const [mintAmount, setMintAmount] = useState(1);
 
-    const [counter, setCounter] = useState(1);
+    const [mintPrice, setMintPrice] = useState("0.1234");
+    const [repurchasePrice, setRepurchasePrice] = useState("0.1234");
+    const [totalMintPrice, setTotalMintPrice] = useState("0.1234");
+
+
     const increase = () => {
-        setCounter(count => count + 1);
+        setMintAmount(count => count + 1);
+        console.log(mintFee * (mintAmount + 1))
+        console.log(ethers.utils.formatUnits(mintFee * (mintAmount + 1)))
+        setTotalMintPrice(ethers.utils.formatUnits(mintFee * (mintAmount + 1)))
     };
 
     const decrease = () => {
-        setCounter(count => count - 1);
+        if (mintAmount <= 1) {
+            setMintAmount(1);
+            setTotalMintPrice(ethers.utils.formatUnits(mintFee))
+        } else {
+            setMintAmount(count => count - 1);
+            setTotalMintPrice(ethers.utils.formatUnits(mintFee * (mintAmount - 1)))
+        }
+
     };
 
     useEffect(() => {
@@ -289,16 +320,13 @@ const Mint = () => {
     };
 
 
-    //1. update image by selected option DONE！
     //todo 2. public sale & pre sale
     //3. useEffect update
     //4,css style
 
     const {mintFee: getMintFee, refetch: updateMintFee} = useContractRead({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function getMintFee(uint256 _teamId) public view returns (uint256)"
-        ],
+        addressOrName: nftContractAddress,
+        contractInterface: ["function getMintFee(uint256 _teamId) public view returns (uint256)"],
         functionName: "getMintFee",
         enabled: isConnected,
         args: [teamId],
@@ -306,15 +334,31 @@ const Mint = () => {
         onSuccess(data) {
             console.log(data.toString())
             setMintFee(data)
-            // updateMintFee()
+            setMintPrice(ethers.utils.formatUnits(data))
+            setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
         }
     })
 
+
+    // const {mintFee: getManyMintFee, refetch: updateManyMintFee} = useContractRead({
+    //     addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
+    //     contractInterface: ["function getManyMintFee(uint256 _teamId, uint256 amount)  public view returns (uint256)"],
+    //     functionName: "getManyMintFee",
+    //     enabled: isConnected,
+    //     args: [teamId, mintAmount],
+    //     chainId: 5,
+    //     onSuccess(data) {
+    //         console.log(data.toString())
+    //         setMintFee(data)
+    //         setMintPrice(ethers.utils.formatUnits(data))
+    //         setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
+    //     }
+    // })
+
+
     const {preSale: isPresale} = useContractRead({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function presaleOpen() public view returns (bool)"
-        ],
+        addressOrName: nftContractAddress,
+        contractInterface: ["function presaleOpen() public view returns (bool)"],
         functionName: "presaleOpen",
         enabled: isConnected,
         args: [],
@@ -328,10 +372,8 @@ const Mint = () => {
     })
 
     const {publicSale: isPublicSale} = useContractRead({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function publicSaleOpen() public view returns (bool)"
-        ],
+        addressOrName: nftContractAddress,
+        contractInterface: ["function publicSaleOpen() public view returns (bool)"],
         functionName: "publicSaleOpen",
         enabled: isConnected,
         args: [],
@@ -342,12 +384,9 @@ const Mint = () => {
         }
     })
 
-
     const {config: pubSaleConfig} = usePrepareContractWrite({
-        addressOrName: "0xf904700b6ed1ce443bb0c7fc3d8566aa48094451",
-        contractInterface: [
-            "function publicMint(uint256 _teamId) public payable"
-        ],
+        addressOrName: nftContractAddress,
+        contractInterface: ["function publicMint(uint256 _teamId) public payable"],
         functionName: "publicMint",
         enabled: (isConnected && isPublicSale),
         args: [teamId],
@@ -361,17 +400,13 @@ const Mint = () => {
     })
 
     const {write: publicWriteSaleNFT, isSuccess} = useContractWrite({
-        ...pubSaleConfig,
-        onMutate(data) {
+        ...pubSaleConfig, onMutate(data) {
             toastId.current = toast("Please wait...", {isLoading: false, autoClose: 3000});
         },
-
         onSuccess(data) {
             console.log("public Mint ", data)
             addRecentTransaction({
-                hash: data.hash,
-                description: `publicMintNFT`,
-                confirmations: 1
+                hash: data.hash, description: `publicMintNFT`, confirmations: 1
             });
             data
                 .wait(1)
@@ -388,71 +423,63 @@ const Mint = () => {
                 .catch((err) => {
                     console.error(err);
                     toast.update(toastId.current, {
-                        render: err,
-                        type: toast.TYPE.ERROR,
-                        isLoading: false,
-                        autoClose: 3_000
+                        render: err, type: toast.TYPE.ERROR, isLoading: false, autoClose: 3_000
                     })
                 });
         },
-
         onError(err) {
             toast.error(JSON.stringify(err.reason))
         }
 
     })
 
-
     return (
-        <div>
-            <br/>
-            <div>
-                <Title>Minting Page</Title>
+        <Section id="mint">
+            <Title>Minting Page</Title>
 
-                <div style={{display:'flex',alignItems:'center',marginTop:'10em',justifyContent:'space-between'}}>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <DropDownContainer>
                     <DropDownHeader onClick={toggling}>
-                        {selectedOption || "Select One Team "}
+                        {selectedOption || " Team Select "}
                     </DropDownHeader>
-                    {isOpen && (
-                        <DropDownListContainer>
-                            <DropDownList>
-                                {options.map(option => (
-                                    <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
-                                        {option}
-                                    </ListItem>
-                                ))}
-                            </DropDownList>
-                        </DropDownListContainer>
-                    )}
+                    {isOpen && (<DropDownListContainer>
+                        <DropDownList>
+                            {options.map(option => (<ListItem onClick={onOptionClicked(option)} key={Math.random()}>
+                                {option}
+                            </ListItem>))}
+                        </DropDownList>
+                    </DropDownListContainer>)}
                 </DropDownContainer>
 
 
-                <div style={{marginRight:'20em'}}>
-                    <button onClick={decrease}>-</button>
-                    <span>      </span>
-                    <span>{counter}</span>
-                    <span>      </span>
-                    <button onClick={increase}>+</button>
+                <div style={{marginRight: '25em', marginTop: '5em', fontSize: "25px"}}>
+                    Mint Amount  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <CounterButton onClick={decrease}>-</CounterButton>
+                    &nbsp;&nbsp;
+                    <span style={{fontSize: '16px'}}>{mintAmount}</span>
+                    &nbsp;&nbsp;
+                    <CounterButton onClick={increase}>+</CounterButton>
                 </div>
-                </div>
-
-                <div>
-                    <Image src={imageSrc} id="select-picture"></Image>
-                </div>
-
-
-                <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>Public Sale</p> :
-                    <p>PreSale </p>} </Btn>
-
-                {/*{isConnected && (<div>the wallet has connected</div>)*/}
-
-                {/*}*/}
-                {/*{!isConnected && (<div>Connect wallet first</div>)}*/}
             </div>
 
 
-        </div>)
+            <div
+                style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "530px"}}>
+                <Image src={imageSrc} id="select-picture"></Image>
+                <div style={{marginRight: '28em', marginTop: '5em'}}>
+                    <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
+                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice}
+                    </MintBox>
+                    <MintBox>
+                        Total Mint Price <img src={EthereumIco} width="14px"
+                                              alt="totalMint"/>   &nbsp;&nbsp; {totalMintPrice}
+                    </MintBox>
+                    <Btn type="button" buynow onClick={publicWriteSaleNFT}> {publicSaleOpen ? <p>MINT</p> :
+                        <p>PreSale </p>} </Btn>
+                </div>
+            </div>
+        </Section>
+    )
 }
 
 export default Mint;
