@@ -180,7 +180,7 @@ const Mint = () => {
     const [preSaleOpen, setPreSaleOpen] = useState(false);
     const [publicSaleOpen, setPublicSaleOpen] = useState(false);
     const [mintFee, setMintFee] = useState(ethers.BigNumber.from(0));
-    const [manyMintFee, setManyMintFee] = useState(ethers.BigNumber.from(0));
+    const [manyMintFee, setManyMintFee] = useState("0.001525");
     const [teamId, setTeamId] = useState(1);
     const [imageSrc, setImageSrc] = useState(Team1)
     const nftContractAddress = '0x297768507c38C5966512c60cE01dC45674189138';
@@ -210,8 +210,8 @@ const Mint = () => {
         "0x8A7C208832500f74AaA521E84FF8a588877Fd332"
     ]
 
-    // const leaves = mainnetWhiteList.map((address) => keccak256(address));
-    // const tree = new MerkleTree(leaves, keccak256, {sort: true});
+    const leaves = mainnetWhiteList.map((address) => keccak256(address));
+    const tree = new MerkleTree(leaves, keccak256, {sort: true});
 
     const increase = () => {
         setMintAmount(count => count + 1);
@@ -229,11 +229,11 @@ const Mint = () => {
     };
 
     useEffect(() => {
-        // mainnetWhiteList.map((item) => {
-        //     if (item === address) {
-        //         setMerkleProofList(tree.getHexProof(keccak256(address)))
-        //     }
-        // })
+        mainnetWhiteList.map((item) => {
+            if (item === address) {
+                setMerkleProofList(tree.getHexProof(keccak256(address)))
+            }
+        })
         console.log(merkleProofList)
     }, [mintFee, address])
 
@@ -358,7 +358,6 @@ const Mint = () => {
             console.log(data.toString())
             setMintFee(data)
             setMintPrice(ethers.utils.formatUnits(data))
-            // setTotalMintPrice(ethers.utils.formatUnits(data * mintAmount))
         }
     })
 
@@ -372,8 +371,9 @@ const Mint = () => {
         chainId: 5,
         onSuccess(data) {
             if (mintAmount === 1) {
-                setManyMintFee(ethers.utils.formatUnits(data))
+                console.log(" mint many token need  ", data)
             }
+            setManyMintFee(ethers.utils.formatEther(data))
         }
     })
 
@@ -389,7 +389,6 @@ const Mint = () => {
             setRepurchasePoolBalance(ethers.utils.formatUnits(data))
         }
     })
-
 
 
     const {preSale: isPresale} = useContractRead({
@@ -449,6 +448,15 @@ const Mint = () => {
         },
         onSuccess(data) {
             console.log(" presale write contract successfully  ")
+            toast.update(toastId.current, {
+                render: "You are in whiteList please Mint your own NFT",
+                type: toast.TYPE.SUCCESS,
+                isLoading: false,
+                autoClose: 3_000
+            })
+        },
+        onError(err) {
+            toast.error(JSON.stringify(err.reason))
         }
     })
 
@@ -567,25 +575,25 @@ const Mint = () => {
 
             <div
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "530px"}}>
-                {/*<Image src={imageSrc} id="select-picture"></Image>*/}
+                <Image src={imageSrc} id="select-picture"></Image>
                 <div style={{marginRight: '28em', marginTop: '5em'}}>
                     <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
                     <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice}
                     </MintBox>
-                    {/*<MintBox>*/}
-                    {/*    Total Mint Price <img src={EthereumIco} width="14px"*/}
-                    {/*                          alt="totalMint"/>   &nbsp;&nbsp; {manyMintFee}*/}
-                    {/*</MintBox>*/}
+                    <MintBox>
+                        Total Mint Price <img src={EthereumIco} width="14px"
+                                              alt="totalMint"/>   &nbsp;&nbsp; {manyMintFee}
+                    </MintBox>
 
-
-                    <div> {manyMintFee} </div>
 
                     <Btn type="button" buynow onClick={writeToContract}> {publicSaleOpen ? <p>MINT</p> :
                         <p>PreSale </p>}
                     </Btn>
                 </div>
             </div>
-            <button onClick={hello}> Hello world + {publicSaleOpen.toString()} {true.toString()} + {merkleProofList} </button>
+
+            {/*<button onClick={hello}> Hello world*/}
+            {/*    + {publicSaleOpen.toString()} {true.toString()} + {merkleProofList} </button>*/}
 
         </Section>
     )
