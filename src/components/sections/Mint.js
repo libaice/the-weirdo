@@ -44,6 +44,7 @@ import EthereumIco from "../../assets/ethereum/eth.jpg";
 import {toast, Id} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {MerkleTree} from "merkletreejs";
+
 const {keccak256} = ethers.utils;
 
 const Title = styled.span`
@@ -196,6 +197,7 @@ const Mint = () => {
     const [merkleProofList, setMerkleProofList] = useState([]);
 
     const [repurchasePoolBalance, setRepurchasePoolBalance] = useState(ethers.BigNumber.from(0));
+    const [teamTotalSupply, setTeamTotalSupply] = useState(0);
 
 
     const mainnetWhiteList = [
@@ -381,14 +383,27 @@ const Mint = () => {
 
 
     const {} = useContractRead({
-        addressOrName: repurchasePoolBalance,
-        contractInterface: ["function getContractBalance() public view returns(uint256)"],
+        addressOrName: repurchasePoolContractAddress,
+        contractInterface: ["function getContractBalance() public view returns (uint256)"],
         functionName: "getContractBalance",
         enabled: isConnected,
         args: [],
         chainId: 5,
         onSuccess(data) {
             setRepurchasePoolBalance(ethers.utils.formatUnits(data))
+        }
+    })
+
+
+    const {} = useContractRead({
+        addressOrName: nftContractAddress,
+        contractInterface: ["function teamTotalSupply(uint256 teamId) public view returns (uint256)"],
+        functionName: "teamTotalSupply",
+        enabled: isConnected,
+        args: [teamId],
+        chainId: 5,
+        onSuccess(data) {
+            setTeamTotalSupply(Number(data._hex))
         }
     })
 
@@ -640,7 +655,7 @@ const Mint = () => {
                 <Image src={imageSrc} id="select-picture"></Image>
                 <div style={{marginRight: '28em', marginTop: '5em'}}>
                     <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
-                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {mintPrice}
+                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {(repurchasePoolBalance / teamTotalSupply).toFixed(4)}
                     </MintBox>
                     <MintBox>
                         Total Mint Price <img src={EthereumIco} width="14px"
