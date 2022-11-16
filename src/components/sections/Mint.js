@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import styled from 'styled-components'
 import {useState, useEffect} from "react";
-import {ethers} from "ethers";
+import { ethers} from "ethers";
 import {useAddRecentTransaction} from '@rainbow-me/rainbowkit';
 import {useAccount, useContractRead, useContractWrite, usePrepareContractWrite} from 'wagmi'
 
@@ -655,7 +655,9 @@ const Mint = () => {
                 <Image src={imageSrc} id="select-picture"></Image>
                 <div style={{marginRight: '28em', marginTop: '5em'}}>
                     <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
-                    <MintBox>Potential Repurchase Price <img src={EthereumIco} width="14px"/>  &nbsp;&nbsp; {(repurchasePoolBalance / teamTotalSupply).toFixed(4)}
+                    {/*.add(ethers.BigNumber.from("0.001").mul(ethers.BigNumber.from(mintAmount)))*/}
+                    <MintBox>Potential Repurchase Price <img src={EthereumIco}
+                                                             width="14px"/>  &nbsp;&nbsp;   {(repurchasePoolBalance / (teamTotalSupply + mintAmount)).toFixed(4)}
                     </MintBox>
                     <MintBox>
                         Total Mint Price <img src={EthereumIco} width="14px"
