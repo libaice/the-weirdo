@@ -639,7 +639,7 @@ const Mint = () => {
                 </DropDownContainer>
 
 
-                <div style={{marginRight: '25em', marginTop: '5em', fontSize: "25px"}}>
+                <div style={{marginRight: '20em', marginTop: '5em', fontSize: "25px"}}>
                     Mint Amount  &nbsp;&nbsp;&nbsp;&nbsp;
                     <CounterButton onClick={decrease}>-</CounterButton>
                     &nbsp;&nbsp;
@@ -653,7 +653,7 @@ const Mint = () => {
             <div
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "530px"}}>
                 <Image src={imageSrc} id="select-picture"></Image>
-                <div style={{marginRight: '28em', marginTop: '5em'}}>
+                <div style={{marginRight: '20em', marginTop: '5em'}}>
                     <MintBox>Mint Price <img src={EthereumIco} width="14px"/>   &nbsp;&nbsp; {mintPrice}</MintBox>
                     {/*.add(ethers.BigNumber.from("0.001").mul(ethers.BigNumber.from(mintAmount)))*/}
                     <MintBox>Potential Repurchase Price <img src={EthereumIco}
