@@ -184,8 +184,8 @@ const Mint = () => {
     const [manyMintFee, setManyMintFee] = useState(ethers.BigNumber.from(0));
     const [teamId, setTeamId] = useState(1);
     const [imageSrc, setImageSrc] = useState(Team1)
-    const nftContractAddress = '0x297768507c38C5966512c60cE01dC45674189138';
-    const repurchasePoolContractAddress = '0x83E78DCB0DA69616f824A8a208ebd7DD357b346c';
+    const nftContractAddress = '0xcc663d9a64fdc7b1cc101710966e1489ec132d4d';
+    const repurchasePoolContractAddress = '0xd6e30f2deb1b28c42211ed886969c5d282f73626';
 
     const toastId = useRef(null);
     const addRecentTransaction = useAddRecentTransaction();
@@ -209,8 +209,7 @@ const Mint = () => {
         "0x856E05db0DCC85b4F2D037698f685b4c35b487FB",
         "0xE69181C78B0dB323E36e9709c6032F8338C0AA8B",
         "0x244dfba48b001a22269fa25373dba7f0293c01e2",
-        "0xA0b790C492b4857aF1e3Ab1e384f03eD973D5268",
-        "0x8A7C208832500f74AaA521E84FF8a588877Fd332"
+        "0x9e1097dc590f9E5dcC603E50aE91d6c00899e48f",
     ]
 
     const leaves = mainnetWhiteList.map((address) => keccak256(address));

@@ -20,7 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const {chains, provider} = configureChains(
-    [chain.goerli],
+    [chain.mainnet],
     [alchemyProvider({apiKey: "HzH9yF5U4oRr7pd5vZqLg9FPrj6HwsAt"})]
 );
 const {connectors} = getDefaultWallets({
